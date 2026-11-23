@@ -1,0 +1,24 @@
+# Java / Maven
+backend/target/
+*.class
+*.jar
+*.war
+*.log
+
+# Node / React
+frontend/node_modules/
+frontend/dist/
+.npm/
+
+# Python / FastAPI
+ml-service/__pycache__/
+ml-service/.venv/
+ml-service/venv/
+*.pyc
+
+# Environment & IDE
+.env
+.idea/
+.vscode/
+*.iml
+.DS_Store
