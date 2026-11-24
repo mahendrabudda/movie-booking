@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
+const CITIES = ['Hyderabad', 'Visakhapatnam', 'Vijayawada', 'Bengaluru', 'Chennai', 'Mumbai'];
+
 const Navbar = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, selectedCity, updateCity } = useAuth();
+  const [navSearch, setNavSearch] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -12,200 +15,166 @@ const Navbar = () => {
     navigate('/login');
   };
 
-  // Determine active step for the top 01..05 cinema workflow bar
-  const path = location.pathname;
-  let activeStep = 1;
-  if (path.includes('/seats')) activeStep = 2;
-  else if (path.includes('/checkout')) activeStep = 4;
-  else if (path.includes('/booking-confirmation')) activeStep = 5;
-
-  const steps = [
-    { num: '01', label: 'Overview', step: 1, to: '/' },
-    { num: '02', label: 'Seats', step: 2, to: null },
-    { num: '03', label: 'Cart', step: 3, to: null },
-    { num: '04', label: 'Payment', step: 4, to: null },
-    { num: '05', label: 'Finish', step: 5, to: null },
-  ];
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    navigate(`/?q=${encodeURIComponent(navSearch.trim())}`);
+  };
 
   const firstName = user?.fullName ? user.fullName.split(' ')[0] : 'Guest';
-  const avatarSeed = encodeURIComponent(user?.fullName || 'CinePulse');
+  const avatarSeed = encodeURIComponent(user?.fullName || 'mahaa');
+  const path = location.pathname;
 
   return (
-    <header className="relative z-30 w-full">
-      <div className="max-w-7xl mx-auto px-6 sm:px-10 h-20 flex items-center justify-between">
-        {/* Left: < BACK button + Brand */}
-        <div className="flex items-center gap-6">
-          {path !== '/' ? (
-            <button
-              type="button"
-              onClick={() => navigate(-1)}
-              className="group flex items-center gap-2 text-xs font-bold tracking-[0.14em] uppercase text-slate-600 hover:text-slate-950 transition"
+    <header className="sticky top-0 z-40 w-full bg-white shadow-sm">
+      <div className="max-w-7xl mx-auto px-4 sm:px-8 h-16 flex items-center justify-between gap-4">
+        <div className="flex items-center gap-6 flex-1">
+          <Link to="/" className="flex items-center gap-2 shrink-0">
+            <span className="w-8 h-8 rounded-lg bg-[#f84464] flex items-center justify-center text-white font-black text-base shadow-sm">
+              m
+            </span>
+            <span className="text-xl font-extrabold tracking-tight text-slate-900">
+              mahaa
+            </span>
+          </Link>
+
+          <form onSubmit={handleSearchSubmit} className="hidden md:flex flex-1 max-w-lg relative">
+            <input
+              type="text"
+              value={navSearch}
+              onChange={(e) => setNavSearch(e.target.value)}
+              placeholder="Search for Movies, Genres, Languages..."
+              className="w-full pl-9 pr-4 py-2 rounded-md border border-slate-200 bg-slate-50 text-xs text-slate-800 focus:outline-none focus:bg-white focus:border-[#f84464]"
+            />
+            <svg
+              className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
             >
-              <svg
-                className="w-4 h-4 text-slate-700 group-hover:-translate-x-0.5 transition"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.2"
-                viewBox="0 0 24 24"
+              <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
+            </svg>
+          </form>
+        </div>
+
+        <div className="flex items-center gap-4">
+          <select
+            value={selectedCity}
+            onChange={(e) => updateCity(e.target.value)}
+            title="Choose your city to see local theatres & shows"
+            className="text-xs font-bold text-slate-700 bg-slate-50 border border-slate-200 rounded-md px-2.5 py-1.5 cursor-pointer focus:outline-none focus:border-[#f84464]"
+          >
+            {CITIES.map((city) => (
+              <option key={city} value={city}>{city}</option>
+            ))}
+          </select>
+
+          {user ? (
+            <div className="relative group flex items-center gap-2">
+              {/* Clicking Consumer Name or Avatar opens /profile directly */}
+              <Link
+                to="/profile"
+                className="flex items-center gap-2 px-2 py-1 rounded-full hover:bg-rose-50 transition"
+                title="Open Profile"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-              </svg>
-              <span>BACK</span>
-            </button>
+                <img
+                  src={`https://api.dicebear.com/7.x/notionists/svg?seed=${avatarSeed}&backgroundColor=ffe4e6`}
+                  alt={user.fullName}
+                  className="w-8 h-8 rounded-full border border-[#f84464]/40 shadow-sm"
+                />
+                <div className="hidden sm:block text-left leading-tight">
+                  <span className="text-xs font-extrabold text-slate-900 block">
+                    {user.fullName}
+                  </span>
+                  <span className="text-[10px] font-semibold text-[#f84464]">
+                    View Profile
+                  </span>
+                </div>
+              </Link>
+
+              <div className="absolute right-0 top-10 w-52 bg-white rounded-xl shadow-xl border border-slate-100 py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+                <div className="px-4 py-2 border-b border-slate-100">
+                  <p className="text-xs font-bold text-slate-900 truncate">{user.fullName}</p>
+                  <p className="text-[10px] font-bold uppercase text-[#f84464]">{user.role}</p>
+                </div>
+                <Link to="/profile" className="block px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50">
+                  My Profile & Location
+                </Link>
+                <Link to="/my-bookings" className="block px-4 py-2 text-xs text-slate-700 hover:bg-slate-50">
+                  My Booked Tickets
+                </Link>
+                {user.role === 'ADMIN' && (
+                  <Link to="/admin" className="block px-4 py-2 text-xs font-semibold text-[#f84464] hover:bg-rose-50">
+                    Admin & AI Pricing
+                  </Link>
+                )}
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="w-full text-left px-4 py-2 text-xs font-bold text-rose-600 hover:bg-rose-50 border-t border-slate-100 mt-1"
+                >
+                  Sign Out
+                </button>
+              </div>
+            </div>
           ) : (
-            <Link to="/" className="flex items-center gap-2.5">
-              <span className="w-8 h-8 rounded-full bg-crimson-500 flex items-center justify-center text-white font-extrabold text-xs tracking-wider shadow-sm">
-                CP
-              </span>
-              <span className="text-base font-extrabold tracking-tight text-slate-900">
-                CinePulse
-              </span>
+            <Link
+              to="/login"
+              className="px-4 py-1.5 rounded-md bg-[#f84464] hover:bg-[#e03353] text-white text-xs font-bold transition shadow-sm"
+            >
+              Sign in
             </Link>
           )}
         </div>
+      </div>
 
-        {/* Center: 01 Overview | 02 Seats | 03 Cart | 04 Payment | 05 Finish */}
-        <nav className="hidden lg:flex items-center gap-9 h-full">
-          {steps.map((item) => {
-            const isCurrent = activeStep === item.step;
-            const content = (
-              <div
-                className={`relative h-20 flex items-center text-xs tracking-wide transition ${
-                  isCurrent
-                    ? 'font-extrabold text-slate-900'
-                    : 'font-medium text-slate-400 hover:text-slate-600'
+      {/* Secondary Navigation Strip */}
+      <div className="bg-slate-100/90 border-t border-slate-200/70">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 h-10 flex items-center justify-between text-xs">
+          <nav className="flex items-center gap-6">
+            <Link
+              to="/"
+              className={`font-semibold transition ${
+                path === '/' ? 'text-[#f84464]' : 'text-slate-600 hover:text-slate-950'
+              }`}
+            >
+              Movies & Theatres
+            </Link>
+            {user && (
+              <>
+                <Link
+                  to="/my-bookings"
+                  className={`font-semibold transition ${
+                    path === '/my-bookings' ? 'text-[#f84464]' : 'text-slate-600 hover:text-slate-950'
+                  }`}
+                >
+                  My Tickets
+                </Link>
+                <Link
+                  to="/profile"
+                  className={`font-semibold transition ${
+                    path === '/profile' ? 'text-[#f84464]' : 'text-slate-600 hover:text-slate-950'
+                  }`}
+                >
+                  {firstName}'s Profile
+                </Link>
+              </>
+            )}
+            {user?.role === 'ADMIN' && (
+              <Link
+                to="/admin"
+                className={`font-bold transition ${
+                  path === '/admin' ? 'text-[#f84464]' : 'text-slate-700 hover:text-[#f84464]'
                 }`}
               >
-                {/* Crimson top indicator bar matching the Pinterest design */}
-                {isCurrent && (
-                  <span className="absolute top-0 left-0 right-0 h-[3.5px] bg-crimson-500 rounded-b-full" />
-                )}
-                <span>
-                  {item.num} {item.label}
-                </span>
-              </div>
-            );
-
-            return item.to ? (
-              <Link key={item.num} to={item.to} className="h-full flex items-center">
-                {content}
+                AI Pricing & Admin
               </Link>
-            ) : (
-              <div key={item.num} className="h-full flex items-center cursor-default">
-                {content}
-              </div>
-            );
-          })}
-        </nav>
+            )}
+          </nav>
 
-        {/* Right: Quick navigation & "Hi, <Name>" profile pill */}
-        <div className="flex items-center gap-5">
-          <Link
-            to="/"
-            className={`text-xs font-semibold transition ${
-              path === '/' ? 'text-crimson-500' : 'text-slate-500 hover:text-slate-900'
-            }`}
-          >
-            Movies
-          </Link>
-
-          {user && (
-            <Link
-              to="/my-bookings"
-              className={`text-xs font-semibold transition ${
-                path === '/my-bookings' ? 'text-crimson-500' : 'text-slate-500 hover:text-slate-900'
-              }`}
-            >
-              My Tickets
-            </Link>
-          )}
-
-          {user?.role === 'ADMIN' && (
-            <Link
-              to="/admin"
-              className={`text-xs font-bold px-3 py-1.5 rounded-full border transition ${
-                path === '/admin'
-                  ? 'bg-crimson-500 text-white border-crimson-500'
-                  : 'bg-crimson-50 text-crimson-600 border-crimson-100 hover:bg-crimson-100'
-              }`}
-            >
-              AI Pricing & Admin
-            </Link>
-          )}
-
-          {user ? (
-            <div className="flex items-center gap-3 pl-2 border-l border-slate-200">
-              <span className="text-xs font-semibold text-slate-700 hidden sm:inline">
-                Hi, {firstName}
-              </span>
-              <div className="relative group">
-                <button
-                  type="button"
-                  className="flex items-center gap-1.5 focus:outline-none"
-                  title={`${user.fullName} (${user.role})`}
-                >
-                  <img
-                    src={`https://api.dicebear.com/7.x/notionists/svg?seed=${avatarSeed}&backgroundColor=ffe4e6`}
-                    alt={firstName}
-                    className="w-9 h-9 rounded-full object-cover border-2 border-white shadow-md"
-                  />
-                  <svg
-                    className="w-3.5 h-3.5 text-slate-500"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-slate-100 py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-50">
-                  <div className="px-4 py-2 border-b border-slate-100">
-                    <p className="text-xs font-bold text-slate-800 truncate">{user.fullName}</p>
-                    <p className="text-[10px] font-semibold uppercase tracking-wider text-crimson-500">
-                      {user.role}
-                    </p>
-                  </div>
-                  <Link
-                    to="/my-bookings"
-                    className="block px-4 py-2 text-xs text-slate-600 hover:bg-slate-50 hover:text-slate-900"
-                  >
-                    My Bookings
-                  </Link>
-                  {user.role === 'ADMIN' && (
-                    <Link
-                      to="/admin"
-                      className="block px-4 py-2 text-xs text-slate-600 hover:bg-slate-50 hover:text-slate-900"
-                    >
-                      Admin & AI Pricing
-                    </Link>
-                  )}
-                  <button
-                    type="button"
-                    onClick={handleLogout}
-                    className="w-full text-left px-4 py-2 text-xs font-semibold text-crimson-600 hover:bg-rose-50"
-                  >
-                    Sign out
-                  </button>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="flex items-center gap-3">
-              <Link
-                to="/login"
-                className="text-xs font-bold text-slate-700 hover:text-slate-950 transition"
-              >
-                Sign In
-              </Link>
-              <Link
-                to="/register"
-                className="px-4 py-2 rounded-lg text-xs font-bold bg-crimson-500 hover:bg-crimson-600 text-white transition cta-crimson-shadow"
-              >
-                Register
-              </Link>
-            </div>
-          )}
+          <span className="hidden sm:inline text-[11px] text-slate-500 font-medium">
+            Showing theatres in <strong className="text-slate-800">{selectedCity}</strong> • AI Dynamic Pricing
+          </span>
         </div>
       </div>
     </header>

@@ -6,6 +6,14 @@ const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [selectedCity, setSelectedCity] = useState(
+    () => localStorage.getItem('mahaa_city') || 'Hyderabad'
+  );
+
+  const updateCity = (city) => {
+    setSelectedCity(city);
+    localStorage.setItem('mahaa_city', city);
+  };
 
   useEffect(() => {
     const restoreSession = async () => {
@@ -47,7 +55,9 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout }}>
+    <AuthContext.Provider
+      value={{ user, loading, login, register, logout, selectedCity, updateCity }}
+    >
       {children}
     </AuthContext.Provider>
   );
