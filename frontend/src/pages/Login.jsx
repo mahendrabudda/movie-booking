@@ -18,7 +18,8 @@ const Login = () => {
     setSubmitting(true);
     try {
       const loggedInUser = await login(email, password);
-      const redirectPath = location.state?.from?.pathname || (loggedInUser.role === 'ADMIN' ? '/admin' : '/');
+      const redirectPath =
+        location.state?.from?.pathname || (loggedInUser.role === 'ADMIN' ? '/admin' : '/');
       navigate(redirectPath, { replace: true });
     } catch (err) {
       setError(err.response?.data?.message || 'Invalid email or password');
@@ -27,88 +28,100 @@ const Login = () => {
     }
   };
 
-  const fillDemoCredentials = (demoEmail, demoPass) => {
-    setEmail(demoEmail);
-    setPassword(demoPass);
-  };
-
   return (
-    <div className="max-w-md mx-auto mt-12 bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-xl">
-      <h1 className="text-2xl font-bold text-white mb-1">Welcome Back</h1>
-      <p className="text-sm text-slate-400 mb-6">Sign in to book tickets or manage AI pricing</p>
-
-      {error && (
-        <div className="mb-4 p-3 rounded-lg bg-rose-500/15 border border-rose-500/40 text-rose-300 text-sm">
-          {error}
-        </div>
-      )}
-
-      <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="max-w-md mx-auto mt-10 px-6 pb-16">
+      <div className="bg-white border border-slate-200/90 rounded-3xl p-8 sm:p-10 poster-elevation space-y-6">
         <div>
-          <label className="block text-xs font-medium text-slate-300 uppercase tracking-wider mb-1.5">
-            Email Address
-          </label>
-          <input
-            type="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="you@example.com"
-            className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-700 text-white text-sm focus:outline-none focus:border-amber-500"
-          />
+          <span className="text-[10px] font-extrabold uppercase tracking-[0.2em] text-crimson-500">
+            CINEPULSE ACCESS
+          </span>
+          <h1 className="text-2xl font-extrabold text-slate-900 mt-1">Sign In</h1>
+          <p className="text-xs text-slate-400 mt-1">
+            Book seats or manage AI dynamic ticket pricing
+          </p>
         </div>
 
-        <div>
-          <label className="block text-xs font-medium text-slate-300 uppercase tracking-wider mb-1.5">
-            Password
-          </label>
-          <input
-            type="password"
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="••••••••"
-            className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-700 text-white text-sm focus:outline-none focus:border-amber-500"
-          />
-        </div>
+        {error && (
+          <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-crimson-600 text-xs font-semibold">
+            {error}
+          </div>
+        )}
 
-        <button
-          type="submit"
-          disabled={submitting}
-          className="w-full py-2.5 rounded-lg bg-amber-500 hover:bg-amber-400 disabled:opacity-50 text-slate-950 font-bold text-sm transition"
-        >
-          {submitting ? 'Signing in...' : 'Sign In'}
-        </button>
-      </form>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">
+              Email Address
+            </label>
+            <input
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
+              className="w-full px-4 py-2.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:border-crimson-500"
+            />
+          </div>
 
-      <div className="mt-6 pt-5 border-t border-slate-800">
-        <p className="text-xs text-slate-400 mb-2.5 font-medium">Quick Fill Demo Accounts (Evaluation):</p>
-        <div className="grid grid-cols-2 gap-2">
+          <div>
+            <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">
+              Password
+            </label>
+            <input
+              type="password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+              className="w-full px-4 py-2.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:border-crimson-500"
+            />
+          </div>
+
           <button
-            type="button"
-            onClick={() => fillDemoCredentials('customer@cinepulse.com', 'Customer@123')}
-            className="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-slate-200 border border-slate-700 transition text-left"
+            type="submit"
+            disabled={submitting}
+            className="w-full py-3 rounded-lg bg-crimson-500 hover:bg-crimson-600 disabled:opacity-50 text-white font-bold text-xs uppercase tracking-wider transition cta-crimson-shadow"
           >
-            <div className="font-semibold text-amber-400">Customer Demo</div>
-            <div className="text-[11px] text-slate-400 truncate">customer@cinepulse.com</div>
+            {submitting ? 'Signing in...' : 'Sign In'}
           </button>
-          <button
-            type="button"
-            onClick={() => fillDemoCredentials('admin@cinepulse.com', 'Admin@123')}
-            className="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-slate-200 border border-slate-700 transition text-left"
-          >
-            <div className="font-semibold text-rose-400">Admin Demo</div>
-            <div className="text-[11px] text-slate-400 truncate">admin@cinepulse.com</div>
-          </button>
+        </form>
+
+        <div className="pt-4 border-t border-slate-100">
+          <p className="text-[11px] text-slate-400 mb-2.5 font-semibold">
+            One-Click Evaluation Accounts:
+          </p>
+          <div className="grid grid-cols-2 gap-2.5">
+            <button
+              type="button"
+              onClick={() => {
+                setEmail('customer@cinepulse.com');
+                setPassword('Customer@123');
+              }}
+              className="p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-left transition"
+            >
+              <div className="text-xs font-extrabold text-slate-800">Customer Demo</div>
+              <div className="text-[10px] text-slate-400 truncate">customer@cinepulse.com</div>
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setEmail('admin@cinepulse.com');
+                setPassword('Admin@123');
+              }}
+              className="p-2.5 rounded-xl bg-crimson-50/60 hover:bg-crimson-50 border border-crimson-100 text-left transition"
+            >
+              <div className="text-xs font-extrabold text-crimson-600">Admin Demo</div>
+              <div className="text-[10px] text-slate-400 truncate">admin@cinepulse.com</div>
+            </button>
+          </div>
         </div>
+
+        <p className="text-xs text-slate-400 text-center">
+          Don't have an account?{' '}
+          <Link to="/register" className="text-crimson-500 font-bold hover:underline">
+            Register as Customer
+          </Link>
+        </p>
       </div>
-
-      <p className="text-xs text-slate-400 text-center mt-6">
-        New to CinePulse?{' '}
-        <Link to="/register" className="text-amber-400 hover:underline font-medium">
-          Create a customer account
-        </Link>
-      </p>
     </div>
   );
 };

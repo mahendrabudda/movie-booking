@@ -20,85 +20,92 @@ const Register = () => {
       await register(fullName, email, password);
       navigate('/');
     } catch (err) {
-      setError(err.response?.data?.message || 'Registration failed. Please verify your inputs.');
+      setError(err.response?.data?.message || 'Registration failed.');
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <div className="max-w-md mx-auto mt-12 bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-xl">
-      <h1 className="text-2xl font-bold text-white mb-1">Create Customer Account</h1>
-      <p className="text-sm text-slate-400 mb-6">
-        Public registration creates a verified <span className="text-amber-400 font-mono">CUSTOMER</span> account.
-      </p>
-
-      {error && (
-        <div className="mb-4 p-3 rounded-lg bg-rose-500/15 border border-rose-500/40 text-rose-300 text-sm">
-          {error}
-        </div>
-      )}
-
-      <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="max-w-md mx-auto mt-10 px-6 pb-16">
+      <div className="bg-white border border-slate-200/90 rounded-3xl p-8 sm:p-10 poster-elevation space-y-6">
         <div>
-          <label className="block text-xs font-medium text-slate-300 uppercase tracking-wider mb-1.5">
-            Full Name
-          </label>
-          <input
-            type="text"
-            required
-            minLength={2}
-            value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
-            placeholder="Mahendra Budda"
-            className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-700 text-white text-sm focus:outline-none focus:border-amber-500"
-          />
+          <span className="text-[10px] font-extrabold uppercase tracking-[0.2em] text-crimson-500">
+            NEW MEMBER
+          </span>
+          <h1 className="text-2xl font-extrabold text-slate-900 mt-1">Create Account</h1>
+          <p className="text-xs text-slate-400 mt-1">
+            Public registration creates a verified CUSTOMER profile
+          </p>
         </div>
 
-        <div>
-          <label className="block text-xs font-medium text-slate-300 uppercase tracking-wider mb-1.5">
-            Email Address
-          </label>
-          <input
-            type="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="mahendra@example.com"
-            className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-700 text-white text-sm focus:outline-none focus:border-amber-500"
-          />
-        </div>
+        {error && (
+          <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-crimson-600 text-xs font-semibold">
+            {error}
+          </div>
+        )}
 
-        <div>
-          <label className="block text-xs font-medium text-slate-300 uppercase tracking-wider mb-1.5">
-            Password (min 6 characters)
-          </label>
-          <input
-            type="password"
-            required
-            minLength={6}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="••••••••"
-            className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-700 text-white text-sm focus:outline-none focus:border-amber-500"
-          />
-        </div>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">
+              Full Name
+            </label>
+            <input
+              type="text"
+              required
+              minLength={2}
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              placeholder="Mahendra Budda"
+              className="w-full px-4 py-2.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:border-crimson-500"
+            />
+          </div>
 
-        <button
-          type="submit"
-          disabled={submitting}
-          className="w-full py-2.5 rounded-lg bg-amber-500 hover:bg-amber-400 disabled:opacity-50 text-slate-950 font-bold text-sm transition"
-        >
-          {submitting ? 'Creating Account...' : 'Create Account'}
-        </button>
-      </form>
+          <div>
+            <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">
+              Email Address
+            </label>
+            <input
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="mahendra@example.com"
+              className="w-full px-4 py-2.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:border-crimson-500"
+            />
+          </div>
 
-      <p className="text-xs text-slate-400 text-center mt-6">
-        Already have an account?{' '}
-        <Link to="/login" className="text-amber-400 hover:underline font-medium">
-          Sign in here
-        </Link>
-      </p>
+          <div>
+            <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">
+              Password (min 6 chars)
+            </label>
+            <input
+              type="password"
+              required
+              minLength={6}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+              className="w-full px-4 py-2.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:border-crimson-500"
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={submitting}
+            className="w-full py-3 rounded-lg bg-crimson-500 hover:bg-crimson-600 disabled:opacity-50 text-white font-bold text-xs uppercase tracking-wider transition cta-crimson-shadow"
+          >
+            {submitting ? 'Creating Account...' : 'Create Account'}
+          </button>
+        </form>
+
+        <p className="text-xs text-slate-400 text-center">
+          Already registered?{' '}
+          <Link to="/login" className="text-crimson-500 font-bold hover:underline">
+            Sign In
+          </Link>
+        </p>
+      </div>
     </div>
   );
 };

@@ -6,14 +6,20 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
+      },
       colors: {
-        cinema: {
-          950: '#090b10',
-          900: '#0f131d',
-          800: '#181f2e',
-          700: '#252f45',
-          accent: '#f59e0b',
-          crimson: '#e11d48'
+        crimson: {
+          50: '#fff1f2',
+          100: '#ffe4e6',
+          500: '#e51937',
+          600: '#cc122e',
+          700: '#a80e25',
+        },
+        seatblue: {
+          500: '#1877f2',
+          600: '#1464cc',
         }
       }
     },

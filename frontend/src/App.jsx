@@ -15,9 +15,9 @@ import AdminDashboard from './pages/AdminDashboard';
 
 const App = () => {
   return (
-    <div className="min-h-screen flex flex-col bg-slate-950 text-slate-100">
+    <div className="min-h-screen flex flex-col bg-white text-slate-800">
       <Navbar />
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="flex-1 w-full">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
@@ -58,10 +58,6 @@ const App = () => {
           />
         </Routes>
       </main>
-
-      <footer className="border-t border-slate-900 py-6 text-center text-xs text-slate-500">
-        CinePulse — Movie Ticket Booking with AI Dynamic Pricing (Spring Boot 3 + FastAPI scikit-learn + React)
-      </footer>
     </div>
   );
 };
